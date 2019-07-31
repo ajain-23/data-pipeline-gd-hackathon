@@ -3,27 +3,38 @@ var chart = []
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 function loadChart() {
-    var xArray = [];
-    var yArray = [];
+    var x = [];
+    var y = [];
 
-    d3.csv("../assets/data/country_retention_rate.csv", function (data) {
+    d3.csv("../assets/data/final_data.csv", function (data) {
         var layout = {
             title: "Categorial Classification of Leaked Domains (6 Months)",
-            xaxis: {title: "Price ($)"},
-            yaxis: {title: "Frequency"},
+            xaxis: {
+                title: "Category",
+                tickangle: 45,
+                tickfont: {
+                    size: 6,
+                  },
+            },
+            yaxis: {
+                title: "Percentage of Leaked Domains (% out of 100)"
+            },
+
         };
 
-        var x = ["Apples","Apples","Apples","Oranges", "Bananas"];
-        
-        var data = [
-          {
-            histfunc: "count",
+        for (var i = 0; i < data.length; i++) {
+            x.push(data[i]['Category'])
+            y.push(data[i]['Percentage'])
+        }
+
+        var data = [{
+            histfunc: "sum",
             x: x,
+            y: y,
             type: "histogram",
             name: "count"
-          }
-        ];
-        
+        }];
+
         Plotly.newPlot('classified_plot', data, layout)
     });
 };
